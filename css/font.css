@@ -1,0 +1,19 @@
+@font-face {
+  font-family: Bebas;
+  font-display: swap;
+  src: url(../fonts/bebas-neue-bold.woff2);
+}
+
+@font-face {
+  font-family: TT Firs Neue Trl;
+  font-display: swap;
+  src: url(../fonts/TT-Firs-Neue-Trial-Bold.woff2);
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: TT Firs Neue Trl;
+  font-display: swap;
+  src: url(../fonts/TTFirsNeueTrialRegular.woff2);
+  font-weight: 400;
+}
