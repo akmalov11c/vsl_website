@@ -1,9 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Biznes 0 dan boshlash va mavjud biznesni rivojlantirish - bepul darslik va ro'yxatdan o'tish"
+    />
     <title>Dostonjon Soyibov</title>
+
+    <link rel="stylesheet" href="./css/font.css" />
     <style>
       * {
         margin: 0;
@@ -149,6 +155,7 @@
       }
 
       .homeFormErrorText {
+        display: none;
         color: #e53e3e;
         margin-bottom: 12px;
         font-size: 14px;
@@ -351,66 +358,89 @@
         font-family: TT Firs Neue Trl, sans-seri;
       }
     </style>
-    <link
-      rel="preload"
-      href="./css/font.css"
-      as="style"
-      onload="this.rel='stylesheet'"
-    />
-    <noscript>
-      <link rel="stylesheet" href="./css/font.css" />
-    </noscript>
   </head>
+
   <body>
     <div class="sec">
-      <div class="container">
-        <p class="timer" id="timer">09:00</p>
+      <main class="container" id="main">
+        <p class="timer" id="timer" aria-live="polite">09:00</p>
+
         <h1 class="VSL_title">
           <span>Biznes 0 dan</span>
           boshlashni va borini rivojlantirishni o'rgatamiz
         </h1>
+
         <p class="free_textbook">Bepul darslik</p>
+
         <img
           src="./img/arrows.avif"
-          alt="kompaniya logosi"
+          alt="arrow"
           width="31"
           height="54"
           loading="lazy"
           decoding="async"
+          fetchpriority="low"
           class="video_arrow"
         />
-        <div class="videoShadow"></div>
+
+        <div class="videoShadow" aria-hidden="true"></div>
+
         <div
           id="vidalytics_embed_66u3VZTcJdH7MaNl"
-          style="width: 100%; position: relative; padding-top: 56.25%"
+          style="
+            width: 100%;
+            position: relative;
+            padding-top: 56.25%;
+            min-height: 180px;
+          "
         ></div>
+
         <p class="timer_info">
           24 soatdan so’ng <span>darslik o’chiriladi!</span>
         </p>
-        <!-- <p class="timer">24:00:00</p> -->
+
         <p class="signUp_info">
           Biznes 0 dan boshlashni va borini rivojlantirishni o'rganish uchun
           ro'yhatdan o'ting!
         </p>
+
         <form
           id="registrationForm"
           class="registrationForm"
           name="registrationForm contact-form"
+          autocomplete="on"
+          novalidate
         >
-          <div class="HomeFormRow mb-2">
+          <div class="HomeFormRow">
             <label class="HomeFormRowLabel" for="name">Ismingiz</label>
-            <input class="HomeFormRowInput" type="text" id="name" name="name" />
-            <p class="homeFormErrorText" id="nameError" style="display: none">
+            <input
+              class="HomeFormRowInput"
+              type="text"
+              id="name"
+              name="name"
+              required
+            />
+            <p class="homeFormErrorText" id="nameError">
               Iltimos, ismingizni kiriting
             </p>
           </div>
+
           <div class="HomeFormRow">
             <label class="HomeFormRowLabel" for="phone"
               >Telefon raqamingiz:</label
             >
-            <div class="phone-input-container">
-              <div class="country-selector">
-                <div class="selected-country" id="selectedCountry">
+            <div
+              class="phone-input-container"
+              style="position: relative; width: 100%"
+            >
+              <div style="margin-right: 10px" class="country-selector">
+                <div
+                  class="selected-country"
+                  id="selectedCountry"
+                  role="button"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                >
                   <span id="selectedCountryCode">+998</span>
                   <svg
                     id="dropdownIcon"
@@ -423,6 +453,7 @@
                     stroke-width="2"
                     stroke-linecap="round"
                     stroke-linejoin="round"
+                    style="margin-left: 8px"
                   >
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
@@ -433,6 +464,7 @@
                   style="display: none"
                 ></div>
               </div>
+
               <input
                 class="HomeFormRowInput"
                 type="tel"
@@ -440,25 +472,31 @@
                 name="phone"
                 placeholder="88 888 88 88"
                 autocomplete="tel"
+                style="flex: 1"
+                required
               />
             </div>
-            <p class="homeFormErrorText" id="phoneError" style="display: none">
+            <p class="homeFormErrorText" id="phoneError">
               ❌ Telefon raqam mos emas!
             </p>
           </div>
+
           <button type="submit" class="HomeFormBtn" id="submitBtn">
             Ro'yxatdan o'tish
           </button>
         </form>
+
         <img
           src="./img/image.avif"
-          alt="speaker"
+          alt="Dostonjon Soyibov"
           width="298"
           height="298"
           loading="lazy"
           decoding="async"
+          fetchpriority="low"
           class="speaker_img"
         />
+
         <div class="speaker__box" style="padding: 0 10px">
           <div class="speaker__info">
             <h2 class="speaker__name">Dostonjon Soyibov</h2>
@@ -467,73 +505,86 @@
             </p>
           </div>
         </div>
-        <div class="bottom_shaodow"></div>
-      </div>
+
+        <div class="bottom_shaodow" aria-hidden="true"></div>
+      </main>
     </div>
+
     <script defer src="./js/script.js"></script>
-    <script type="text/javascript" defer>
-      (function (v, i, d, a, l, y, t, c, s) {
-        y = "_" + d.toLowerCase();
-        c = d + "L";
-        if (!v[d]) {
-          v[d] = {};
-        }
-        if (!v[c]) {
-          v[c] = {};
-        }
-        if (!v[y]) {
-          v[y] = {};
-        }
-        var vl = "Loader",
-          vli = v[y][vl],
-          vsl = v[c][vl + "Script"],
-          vlf = v[c][vl + "Loaded"],
-          ve = "Embed";
-        if (!vsl) {
-          vsl = function (u, cb) {
-            if (t) {
-              cb();
-              return;
-            }
-            s = i.createElement("script");
-            s.type = "text/javascript";
-            s.async = 1;
-            s.src = u;
-            if (s.readyState) {
-              s.onreadystatechange = function () {
-                if (s.readyState === "loaded" || s.readyState == "complete") {
-                  s.onreadystatechange = null;
+
+    <script>
+      (function () {
+        const VID_ID = "vidalytics_embed_66u3VZTcJdH7MaNl";
+        const BASE =
+          "https://fast.vidalytics.com/embeds/bN5OpdPL/66u3VZTcJdH7MaNl/";
+
+        function loadPlayer() {
+          if (window._VidalyticsLoaded) return;
+          window._VidalyticsLoaded = true;
+
+          (function (v, i, d, a, l, y, t, c, s) {
+            y = "_" + d.toLowerCase();
+            c = d + "L";
+            if (!v[d]) v[d] = {};
+            if (!v[c]) v[c] = {};
+            if (!v[y]) v[y] = {};
+
+            var vl = "Loader",
+              vli = v[y][vl],
+              vsl = v[c][vl + "Script"],
+              vlf = v[c][vl + "Loaded"],
+              ve = "Embed";
+
+            if (!vsl) {
+              vsl = function (u, cb) {
+                if (t) {
+                  cb();
+                  return;
+                }
+                s = i.createElement("script");
+                s.type = "text/javascript";
+                s.async = 1;
+                s.src = u;
+                s.onload = function () {
                   vlf = 1;
                   cb();
-                }
-              };
-            } else {
-              s.onload = function () {
-                vlf = 1;
-                cb();
+                };
+                i.getElementsByTagName("head")[0].appendChild(s);
               };
             }
-            i.getElementsByTagName("head")[0].appendChild(s);
-          };
+            vsl(l + "loader.min.js", function () {
+              if (!vli) {
+                var vlc = v[c][vl];
+                vli = new vlc();
+              }
+              vli.loadScript(l + "player.min.js", function () {
+                var vec = v[d][ve];
+                t = new vec();
+                t.run(a);
+              });
+            });
+          })(window, document, "Vidalytics", VID_ID, BASE);
         }
-        vsl(l + "loader.min.js", function () {
-          if (!vli) {
-            var vlc = v[c][vl];
-            vli = new vlc();
-          }
-          vli.loadScript(l + "player.min.js", function () {
-            var vec = v[d][ve];
-            t = new vec();
-            t.run(a);
-          });
-        });
-      })(
-        window,
-        document,
-        "Vidalytics",
-        "vidalytics_embed_66u3VZTcJdH7MaNl",
-        "https://fast.vidalytics.com/embeds/bN5OpdPL/66u3VZTcJdH7MaNl/"
-      );
+
+        const el = document.getElementById(VID_ID);
+        if (el && "IntersectionObserver" in window) {
+          const obs = new IntersectionObserver(
+            (entries, o) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  loadPlayer();
+                  o.disconnect();
+                }
+              });
+            },
+            { rootMargin: "300px" }
+          );
+          obs.observe(el);
+        } else {
+          // fallback
+          setTimeout(loadPlayer, 1500);
+        }
+      })();
     </script>
   </body>
 </html>
