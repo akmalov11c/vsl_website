@@ -174,9 +174,26 @@ function initForm() {
     window.location.href = "/thankYou.html";
   });
 
-  // === Lazy chunked setup ===
-  requestIdleCallback(startCountdown);
-  requestIdleCallback(setupCountries);
+  // === Lazy chunked setup (mobile-safe) ===
+  function safeRun(fn, delay = 300) {
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(fn, { timeout: 500 });
+    } else {
+      setTimeout(fn, delay);
+    }
+  }
+
+  // run both functions safely on all devices
+  safeRun(startCountdown);
+  safeRun(setupCountries);
+
+  // fallback for some iOS / Android browsers that ignore idle callbacks
+  setTimeout(() => {
+    if (!window.__timerStarted) {
+      window.__timerStarted = true;
+      startCountdown();
+    }
+  }, 1500);
 }
 
 // === Safe, non-blocking execution ===
