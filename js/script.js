@@ -179,24 +179,21 @@ function initForm() {
   requestIdleCallback(setupCountries);
 }
 
-// === Execute when DOM ready and split into microtasks ===
+// === Safe, non-blocking execution ===
 function startApp() {
-  // Run initForm in next frame (non-blocking)
+  // Schedule initForm to run right after the browser paints the page
   requestAnimationFrame(() => {
-    requestIdleCallback(() => initForm(), { timeout: 500 });
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(initForm, { timeout: 1000 });
+    } else {
+      setTimeout(initForm, 100);
+    }
   });
-
-  // Lazy-initialize analytics or third-party scripts later
-  setTimeout(() => {
-    import("./analytics.js").catch(() => {});
-  }, 3000);
 }
 
-if (
-  document.readyState === "complete" ||
-  document.readyState === "interactive"
-) {
-  startApp();
-} else {
+// Run when DOM is ready
+if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", startApp);
+} else {
+  startApp();
 }
