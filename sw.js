@@ -9,13 +9,12 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("fetch", (event) => {
   const url = event.request.url;
-  if (url.includes(TARGET) && url.endsWith(FILE)) {
+  if (url.includes("fast.vidalytics.com")) {
     event.respondWith(
-      caches.open(CACHE_NAME).then((cache) =>
+      caches.open("vidalytics-cache").then((cache) =>
         cache.match(event.request).then((resp) => {
-          if (resp) return resp; // already cached
+          if (resp) return resp;
           return fetch(event.request).then((netResp) => {
-            // clone & save in cache for 1 year
             cache.put(event.request, netResp.clone());
             return netResp;
           });
