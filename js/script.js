@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Elements
   const form = document.getElementById("registrationForm");
   const nameInput = document.getElementById("name");
   const phoneInput = document.getElementById("phone");
@@ -7,7 +8,55 @@ document.addEventListener("DOMContentLoaded", () => {
   const countryCodeEl = document.getElementById("selectedCountryCode");
   const dropdown = document.getElementById("countryDropdown");
   const dropdownIcon = document.getElementById("dropdownIcon");
+  const unlockBtn = document.getElementById("unlockBtn");
+  const timerElement = document.getElementById("timer");
 
+  // ---- Lock state (30:00 gate) ----
+  let totalSeconds = 1800; // 30 minutes
+  const pad = (n) => String(n).padStart(2, "0");
+  const setTime = (s) => {
+    const m = pad(Math.floor(s / 60));
+    const sec = pad(s % 60);
+    timerElement.textContent = `${m}:${sec}`;
+    if (unlockBtn) unlockBtn.textContent = `Ro'yxatdan o'tish (${m}:${sec})`;
+  };
+
+  // Ensure initial UI state
+  if (form) form.style.display = "none";
+  if (unlockBtn) {
+    unlockBtn.disabled = true;
+    unlockBtn.setAttribute("aria-disabled", "true");
+    setTime(totalSeconds);
+  }
+
+  const countdown = setInterval(() => {
+    totalSeconds--;
+    if (totalSeconds <= 0) {
+      clearInterval(countdown);
+      if (unlockBtn) {
+        unlockBtn.disabled = false;
+        unlockBtn.removeAttribute("aria-disabled");
+        unlockBtn.textContent = "Ro'yxatdan o'tish";
+      }
+      timerElement.textContent = "00:00";
+      return;
+    }
+    setTime(totalSeconds);
+  }, 1000);
+
+  // Reveal form after unlock
+  if (unlockBtn) {
+    unlockBtn.addEventListener("click", () => {
+      if (unlockBtn.disabled) return;
+      unlockBtn.style.display = "none"; // hide the gate button
+      if (form) {
+        form.style.display = "block"; // show the form
+        setTimeout(() => nameInput && nameInput.focus(), 0);
+      }
+    });
+  }
+
+  // ---- Country list & formatting (original logic) ----
   const countries = [
     { name: "Uzbekistan", code: "+998" },
     { name: "AQSH", code: "+1" },
@@ -79,7 +128,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const onlyNums = e.target.value
       .replace(/\D/g, "")
       .slice(0, formats[selectedCode].cut);
-    const ph = formats[selectedCode];
     let v = onlyNums;
 
     if (selectedCode === "+998") {
@@ -97,7 +145,6 @@ document.addEventListener("DOMContentLoaded", () => {
         );
       }
     }
-
     e.target.value = v;
     phoneError.style.display = "none";
   });
@@ -126,17 +173,6 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("FormData", JSON.stringify(data));
 
     form.querySelector("button").disabled = true;
-
     window.location.href = "/thankYou.html";
   });
 });
-
-let totalSeconds = 540;
-const timerElement = document.getElementById("timer");
-const countdown = setInterval(() => {
-  if (totalSeconds <= 0) return clearInterval(countdown);
-  totalSeconds--;
-  const m = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
-  const s = String(totalSeconds % 60).padStart(2, "0");
-  timerElement.textContent = `${m}:${s}`;
-}, 1000);

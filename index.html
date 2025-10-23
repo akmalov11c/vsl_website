@@ -39,12 +39,10 @@
         padding: 0;
         box-sizing: border-box;
       }
-
       body {
         overflow-x: hidden;
         background-color: #fff;
       }
-
       .sec {
         overflow-y: hidden;
         overflow-x: hidden;
@@ -83,9 +81,9 @@
         text-transform: uppercase;
         margin-bottom: 22px;
         text-align: center;
-        span {
-          color: #2f72f5;
-        }
+      }
+      .VSL_title span {
+        color: #2f72f5;
       }
 
       .free_textbook,
@@ -131,9 +129,9 @@
         text-align: center;
         margin-top: 6px;
         margin-bottom: 15px;
-        span {
-          color: #ff0000;
-        }
+      }
+      .timer_info span {
+        color: #ff0000;
       }
 
       .timer {
@@ -167,7 +165,6 @@
         position: relative;
         z-index: 20;
       }
-
       .bottom_shaodow {
         width: 100%;
         height: 408px;
@@ -194,11 +191,9 @@
           "Segoe UI", sans-serif;
         font-size: 16px;
       }
-
       .HomeFormRow {
         margin-bottom: 15px;
       }
-
       .HomeFormRowLabel {
         display: block;
         margin-bottom: 6px;
@@ -218,11 +213,9 @@
         transition: border-color 0.2s;
         background-color: #fff;
       }
-
       .HomeFormRowInput:focus {
         border-color: #2d71f5;
       }
-
       .HomeFormRowInput::placeholder {
         color: #aaa;
       }
@@ -264,7 +257,6 @@
         align-items: center;
         position: relative;
       }
-
       .country-selector {
         margin-right: 10px;
       }
@@ -308,15 +300,12 @@
         font-family: sans-serif;
         font-weight: 400 !important;
       }
-
       .country-option:hover {
         background-color: #f3f7f8;
       }
-
       .country-option.selected {
         background-color: #e6f0fa;
       }
-
       .country-code {
         margin-left: auto;
         margin-right: 10px;
@@ -326,20 +315,16 @@
         .container {
           padding-top: 15px;
         }
-
         .VSL_logo {
           margin-bottom: 15px;
         }
-
         .VSL_title {
           margin-bottom: 15px;
         }
-
         .signUp_info {
           font-size: 14px;
         }
       }
-
       @media (max-width: 330px) {
         .signUp_info {
           font-size: 11px;
@@ -386,7 +371,7 @@
   <body>
     <div class="sec">
       <main class="container" id="main">
-        <p class="timer" id="timer" aria-live="polite">09:00</p>
+        <!-- <p class="timer" id="timer" aria-live="polite">30:00</p> -->
 
         <h1 class="VSL_title">
           <span>Biznes 0 dan</span>
@@ -409,7 +394,7 @@
         <div class="videoShadow" aria-hidden="true"></div>
 
         <div
-          id="vidalytics_embed_66u3VZTcJdH7MaNl"
+          id="vidalytics_embed_f9EirJtBJmgkdGqn"
           style="
             width: 100%;
             position: relative;
@@ -427,12 +412,24 @@
           ro'yhatdan o'ting!
         </p>
 
+        <button
+          id="unlockBtn"
+          class="HomeFormBtn"
+          disabled
+          aria-disabled="true"
+          aria-controls="registrationForm"
+          style="margin-bottom: 15px"
+        >
+          Ro'yxatdan o'tish (30:00)
+        </button>
+
         <form
           id="registrationForm"
           class="registrationForm"
           name="registrationForm contact-form"
           autocomplete="on"
           novalidate
+          style="display: none"
         >
           <div class="HomeFormRow">
             <label class="HomeFormRowLabel" for="name">Ismingiz</label>
@@ -538,9 +535,9 @@
     <script>
       window.addEventListener("load", function () {
         (function () {
-          const VID_ID = "vidalytics_embed_66u3VZTcJdH7MaNl";
+          const VID_ID = "vidalytics_embed_f9EirJtBJmgkdGqn";
           const BASE =
-            "https://fast.vidalytics.com/embeds/bN5OpdPL/66u3VZTcJdH7MaNl/";
+            "https://fast.vidalytics.com/embeds/bN5OpdPL/f9EirJtBJmgkdGqn/";
 
           function loadPlayer() {
             if (window._VidalyticsLoaded) return;
@@ -552,13 +549,11 @@
               if (!v[d]) v[d] = {};
               if (!v[c]) v[c] = {};
               if (!v[y]) v[y] = {};
-
               var vl = "Loader",
                 vli = v[y][vl],
                 vsl = v[c][vl + "Script"],
                 vlf = v[c][vl + "Loaded"],
                 ve = "Embed";
-
               if (!vsl) {
                 vsl = function (u, cb) {
                   if (t) {
