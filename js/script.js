@@ -179,13 +179,24 @@ function initForm() {
   requestIdleCallback(setupCountries);
 }
 
-// === Execute when DOM ready ===
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => {
-    if ("requestIdleCallback" in window) requestIdleCallback(initForm);
-    else initForm();
+// === Execute when DOM ready and split into microtasks ===
+function startApp() {
+  // Run initForm in next frame (non-blocking)
+  requestAnimationFrame(() => {
+    requestIdleCallback(() => initForm(), { timeout: 500 });
   });
+
+  // Lazy-initialize analytics or third-party scripts later
+  setTimeout(() => {
+    import("./analytics.js").catch(() => {});
+  }, 3000);
+}
+
+if (
+  document.readyState === "complete" ||
+  document.readyState === "interactive"
+) {
+  startApp();
 } else {
-  if ("requestIdleCallback" in window) requestIdleCallback(initForm);
-  else initForm();
+  document.addEventListener("DOMContentLoaded", startApp);
 }
