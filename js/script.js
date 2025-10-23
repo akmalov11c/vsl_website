@@ -33,9 +33,13 @@ function initForm() {
   }
 
   function startCountdown() {
+    const endTime = Date.now() + totalSeconds * 1000;
+    window.__timerStarted = true; // flag so fallback won’t re-start it
+
     const countdown = setInterval(() => {
-      totalSeconds--;
-      if (totalSeconds <= 0) {
+      const remaining = Math.max(0, Math.round((endTime - Date.now()) / 1000));
+      totalSeconds = remaining;
+      if (remaining <= 0) {
         clearInterval(countdown);
         if (unlockBtn) {
           unlockBtn.disabled = false;
@@ -43,7 +47,9 @@ function initForm() {
           unlockBtn.textContent = "Ro'yxatdan o'tish";
         }
         timerElement.textContent = "00:00";
-      } else setTime(totalSeconds);
+      } else {
+        setTime(remaining);
+      }
     }, 1000);
   }
 
