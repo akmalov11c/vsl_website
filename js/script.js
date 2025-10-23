@@ -1,4 +1,6 @@
-document.addEventListener("DOMContentLoaded", () => {
+// === Performance-Optimized Form Logic ===
+
+function initForm() {
   const form = document.getElementById("registrationForm");
   const nameInput = document.getElementById("name");
   const phoneInput = document.getElementById("phone");
@@ -10,13 +12,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const unlockBtn = document.getElementById("unlockBtn");
   const timerElement = document.getElementById("timer");
 
+  // === 30-minute countdown ===
   let totalSeconds = 1800;
   const pad = (n) => String(n).padStart(2, "0");
+
   const setTime = (s) => {
     const m = pad(Math.floor(s / 60));
     const sec = pad(s % 60);
-    timerElement.textContent = `${m}:${sec}`;
-    if (unlockBtn) unlockBtn.textContent = `Ro'yxatdan o'tish (${m}:${sec})`;
+    const t = `${m}:${sec}`;
+    if (timerElement.textContent !== t) timerElement.textContent = t;
+    if (unlockBtn && unlockBtn.textContent !== `Ro'yxatdan o'tish (${t})`)
+      unlockBtn.textContent = `Ro'yxatdan o'tish (${t})`;
   };
 
   if (form) form.style.display = "none";
@@ -26,32 +32,34 @@ document.addEventListener("DOMContentLoaded", () => {
     setTime(totalSeconds);
   }
 
-  const countdown = setInterval(() => {
-    totalSeconds--;
-    if (totalSeconds <= 0) {
-      clearInterval(countdown);
-      if (unlockBtn) {
-        unlockBtn.disabled = false;
-        unlockBtn.removeAttribute("aria-disabled");
-        unlockBtn.textContent = "Ro'yxatdan o'tish";
-      }
-      timerElement.textContent = "00:00";
-      return;
-    }
-    setTime(totalSeconds);
-  }, 1000);
+  function startCountdown() {
+    const countdown = setInterval(() => {
+      totalSeconds--;
+      if (totalSeconds <= 0) {
+        clearInterval(countdown);
+        if (unlockBtn) {
+          unlockBtn.disabled = false;
+          unlockBtn.removeAttribute("aria-disabled");
+          unlockBtn.textContent = "Ro'yxatdan o'tish";
+        }
+        timerElement.textContent = "00:00";
+      } else setTime(totalSeconds);
+    }, 1000);
+  }
 
+  // === Unlock button logic ===
   if (unlockBtn) {
     unlockBtn.addEventListener("click", () => {
       if (unlockBtn.disabled) return;
       unlockBtn.style.display = "none";
       if (form) {
         form.style.display = "block";
-        setTimeout(() => nameInput && nameInput.focus(), 0);
+        setTimeout(() => nameInput?.focus(), 0);
       }
     });
   }
 
+  // === Country setup ===
   const countries = [
     { name: "Uzbekistan", code: "+998" },
     { name: "AQSH", code: "+1" },
@@ -83,62 +91,58 @@ document.addEventListener("DOMContentLoaded", () => {
   phoneInput.placeholder = formats[selectedCode].ph;
   phoneInput.maxLength = formats[selectedCode].max;
 
-  countryCodeEl.addEventListener("click", () => {
-    const open = dropdown.style.display === "block";
-    dropdown.style.display = open ? "none" : "block";
-    dropdownIcon.innerHTML = open
-      ? '<polyline points="6 9 12 15 18 9"></polyline>'
-      : '<polyline points="18 15 12 9 6 15"></polyline>';
+  function setupCountries() {
+    countryCodeEl.addEventListener("click", () => {
+      const open = dropdown.style.display === "block";
+      dropdown.style.display = open ? "none" : "block";
+      dropdownIcon.innerHTML = open
+        ? '<polyline points="6 9 12 15 18 9"></polyline>'
+        : '<polyline points="18 15 12 9 6 15"></polyline>';
 
-    if (!open) {
-      dropdown.innerHTML = "";
-      countries.forEach((c) => {
-        const div = document.createElement("div");
-        div.className = "country-option";
-        div.innerHTML = `<span>${c.name}</span><span class="country-code">${c.code}</span>`;
-        div.onclick = () => {
-          selectedCode = c.code;
-          countryCodeEl.textContent = c.code;
-          dropdown.style.display = "none";
-          phoneInput.placeholder = formats[c.code].ph;
-          phoneInput.maxLength = formats[c.code].max;
-          phoneInput.value = "";
-          phoneError.style.display = "none";
-          dropdownIcon.innerHTML =
-            '<polyline points="6 9 12 15 18 9"></polyline>';
-        };
-        dropdown.appendChild(div);
-      });
-    }
-  });
+      if (!open) {
+        dropdown.innerHTML = "";
+        countries.forEach((c) => {
+          const div = document.createElement("div");
+          div.className = "country-option";
+          div.innerHTML = `<span>${c.name}</span><span class="country-code">${c.code}</span>`;
+          div.onclick = () => {
+            selectedCode = c.code;
+            countryCodeEl.textContent = c.code;
+            dropdown.style.display = "none";
+            phoneInput.placeholder = formats[c.code].ph;
+            phoneInput.maxLength = formats[c.code].max;
+            phoneInput.value = "";
+            phoneError.style.display = "none";
+            dropdownIcon.innerHTML =
+              '<polyline points="6 9 12 15 18 9"></polyline>';
+          };
+          dropdown.appendChild(div);
+        });
+      }
+    });
 
-  document.addEventListener("click", (e) => {
-    if (!countryCodeEl.contains(e.target) && !dropdown.contains(e.target)) {
-      dropdown.style.display = "none";
-      dropdownIcon.innerHTML = '<polyline points="6 9 12 15 18 9"></polyline>';
-    }
-  });
+    document.addEventListener("click", (e) => {
+      if (!countryCodeEl.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.style.display = "none";
+        dropdownIcon.innerHTML =
+          '<polyline points="6 9 12 15 18 9"></polyline>';
+      }
+    });
+  }
 
+  // === Input formatters ===
   phoneInput.addEventListener("input", (e) => {
     const onlyNums = e.target.value
       .replace(/\D/g, "")
       .slice(0, formats[selectedCode].cut);
     let v = onlyNums;
-
     if (selectedCode === "+998") {
-      if (v.length > 2 && v.length <= 5) {
-        v = v.replace(/(\d{2})(\d{0,3})/, (_, a, b) => `${a} ${b}`);
-      } else if (v.length > 5 && v.length <= 7) {
-        v = v.replace(
-          /(\d{2})(\d{3})(\d{0,2})/,
-          (_, a, b, c) => `${a} ${b} ${c}`
-        );
-      } else if (v.length > 7) {
-        v = v.replace(
-          /(\d{2})(\d{3})(\d{2})(\d{0,2})/,
-          (_, a, b, c, d) => `${a} ${b} ${c} ${d}`
-        );
-      }
+      if (v.length > 2 && v.length <= 5)
+        v = v.replace(/(\d{2})(\d{0,3})/, "$1 $2");
+      else if (v.length > 5 && v.length <= 7)
+        v = v.replace(/(\d{2})(\d{3})(\d{0,2})/, "$1 $2 $3");
+      else if (v.length > 7)
+        v = v.replace(/(\d{2})(\d{3})(\d{2})(\d{0,2})/, "$1 $2 $3 $4");
     }
     e.target.value = v;
     phoneError.style.display = "none";
@@ -166,8 +170,22 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     localStorage.setItem("FormData", JSON.stringify(data));
-
     form.querySelector("button").disabled = true;
     window.location.href = "/thankYou.html";
   });
-});
+
+  // === Lazy chunked setup ===
+  requestIdleCallback(startCountdown);
+  requestIdleCallback(setupCountries);
+}
+
+// === Execute when DOM ready ===
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    if ("requestIdleCallback" in window) requestIdleCallback(initForm);
+    else initForm();
+  });
+} else {
+  if ("requestIdleCallback" in window) requestIdleCallback(initForm);
+  else initForm();
+}
