@@ -1,37 +1,39 @@
-// sw.js — caches the Vidalytics loader for 1 year
-const CACHE_NAME = "vidalytics-cache-v1";
-const TARGET = "fast.vidalytics.com";
-const FILE = "loader.min.js";
+// sw.js — cache all Vidalytics assets (scripts + thumbnails)
+const CACHE_NAME = "vidalytics-cache-v2";
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll([])));
-});
-
-self.addEventListener("fetch", (event) => {
-  const url = event.request.url;
-  if (url.includes("fast.vidalytics.com")) {
-    event.respondWith(
-      caches.open("vidalytics-cache").then((cache) =>
-        cache.match(event.request).then((resp) => {
-          if (resp) return resp;
-          return fetch(event.request).then((netResp) => {
-            cache.put(event.request, netResp.clone());
-            return netResp;
-          });
-        })
-      )
-    );
-  }
+  event.waitUntil(self.skipWaiting());
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches
-      .keys()
-      .then((keys) =>
-        Promise.all(
-          keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
-        )
-      )
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(
+        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
+      );
+      await self.clients.claim();
+    })()
   );
+});
+
+self.addEventListener("fetch", (event) => {
+  const url = new URL(event.request.url);
+  if (url.hostname === "fast.vidalytics.com") {
+    event.respondWith(
+      caches.open(CACHE_NAME).then(async (cache) => {
+        const cached = await cache.match(event.request);
+        if (cached) return cached; // cache-first
+        const resp = await fetch(event.request, {
+          // then network
+          mode: "cors",
+          credentials: "omit",
+        });
+        try {
+          cache.put(event.request, resp.clone());
+        } catch (_) {}
+        return resp;
+      })
+    );
+  }
 });
