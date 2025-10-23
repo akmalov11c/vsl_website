@@ -37,19 +37,6 @@
       href="/fonts/TTFirsNeueTrialRegular.woff2"
       crossorigin
     />
-    <link rel="preconnect" href="https://fast.vidalytics.com" crossorigin />
-    <link
-      rel="preload"
-      as="script"
-      href="https://fast.vidalytics.com/embeds/bN5OpdPL/f9EirJtBJmgkdGqn/loader.min.js"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      as="script"
-      href="https://fast.vidalytics.com/embeds/bN5OpdPL/f9EirJtBJmgkdGqn/player.min.js"
-      crossorigin
-    />
 
     <link
       rel="preload"
@@ -580,14 +567,6 @@
     <script defer src="./js/script.js"></script>
 
     <script>
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker
-            .register("./sw.js")
-            .then(() => console.log("✅ Service Worker registered"))
-            .catch((err) => console.error("SW registration failed:", err));
-        });
-      }
       window.addEventListener("load", function () {
         (function () {
           const VID_ID = "vidalytics_embed_f9EirJtBJmgkdGqn";
