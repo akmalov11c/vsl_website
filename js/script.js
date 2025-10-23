@@ -1,6 +1,6 @@
-// === Performance-Optimized Form Logic (Final) ===
+// === Performance-Optimized Form Logic ===
 
-function setupFormLogic() {
+function initForm() {
   const form = document.getElementById("registrationForm");
   const nameInput = document.getElementById("name");
   const phoneInput = document.getElementById("phone");
@@ -12,18 +12,17 @@ function setupFormLogic() {
   const unlockBtn = document.getElementById("unlockBtn");
   const timerElement = document.getElementById("timer");
 
-  // === Countdown ===
+  // === 30-minute countdown ===
   let totalSeconds = 1800;
   const pad = (n) => String(n).padStart(2, "0");
+
   const setTime = (s) => {
     const m = pad(Math.floor(s / 60));
     const sec = pad(s % 60);
     const t = `${m}:${sec}`;
-    requestAnimationFrame(() => {
-      if (timerElement.textContent !== t) timerElement.textContent = t;
-      if (unlockBtn && unlockBtn.textContent !== `Ro'yxatdan o'tish (${t})`)
-        unlockBtn.textContent = `Ro'yxatdan o'tish (${t})`;
-    });
+    if (timerElement.textContent !== t) timerElement.textContent = t;
+    if (unlockBtn && unlockBtn.textContent !== `Ro'yxatdan o'tish (${t})`)
+      unlockBtn.textContent = `Ro'yxatdan o'tish (${t})`;
   };
 
   if (form) form.style.display = "none";
@@ -38,33 +37,29 @@ function setupFormLogic() {
       totalSeconds--;
       if (totalSeconds <= 0) {
         clearInterval(countdown);
-        requestAnimationFrame(() => {
-          if (unlockBtn) {
-            unlockBtn.disabled = false;
-            unlockBtn.removeAttribute("aria-disabled");
-            unlockBtn.textContent = "Ro'yxatdan o'tish";
-          }
-          timerElement.textContent = "00:00";
-        });
+        if (unlockBtn) {
+          unlockBtn.disabled = false;
+          unlockBtn.removeAttribute("aria-disabled");
+          unlockBtn.textContent = "Ro'yxatdan o'tish";
+        }
+        timerElement.textContent = "00:00";
       } else setTime(totalSeconds);
     }, 1000);
   }
 
-  // === Unlock Button ===
+  // === Unlock button logic ===
   if (unlockBtn) {
     unlockBtn.addEventListener("click", () => {
       if (unlockBtn.disabled) return;
       unlockBtn.style.display = "none";
-      requestAnimationFrame(() => {
-        if (form) {
-          form.style.display = "block";
-          setTimeout(() => nameInput?.focus(), 0);
-        }
-      });
+      if (form) {
+        form.style.display = "block";
+        setTimeout(() => nameInput?.focus(), 0);
+      }
     });
   }
 
-  // === Country Setup (lazy, chunked) ===
+  // === Country setup ===
   const countries = [
     { name: "Uzbekistan", code: "+998" },
     { name: "AQSH", code: "+1" },
@@ -106,27 +101,22 @@ function setupFormLogic() {
 
       if (!open) {
         dropdown.innerHTML = "";
-        countries.forEach((c, i) => {
-          requestIdleCallback(
-            () => {
-              const div = document.createElement("div");
-              div.className = "country-option";
-              div.innerHTML = `<span>${c.name}</span><span class="country-code">${c.code}</span>`;
-              div.onclick = () => {
-                selectedCode = c.code;
-                countryCodeEl.textContent = c.code;
-                dropdown.style.display = "none";
-                phoneInput.placeholder = formats[c.code].ph;
-                phoneInput.maxLength = formats[c.code].max;
-                phoneInput.value = "";
-                phoneError.style.display = "none";
-                dropdownIcon.innerHTML =
-                  '<polyline points="6 9 12 15 18 9"></polyline>';
-              };
-              dropdown.appendChild(div);
-            },
-            { timeout: 50 + i * 20 }
-          );
+        countries.forEach((c) => {
+          const div = document.createElement("div");
+          div.className = "country-option";
+          div.innerHTML = `<span>${c.name}</span><span class="country-code">${c.code}</span>`;
+          div.onclick = () => {
+            selectedCode = c.code;
+            countryCodeEl.textContent = c.code;
+            dropdown.style.display = "none";
+            phoneInput.placeholder = formats[c.code].ph;
+            phoneInput.maxLength = formats[c.code].max;
+            phoneInput.value = "";
+            phoneError.style.display = "none";
+            dropdownIcon.innerHTML =
+              '<polyline points="6 9 12 15 18 9"></polyline>';
+          };
+          dropdown.appendChild(div);
         });
       }
     });
@@ -140,7 +130,7 @@ function setupFormLogic() {
     });
   }
 
-  // === Input Events ===
+  // === Input formatters ===
   phoneInput.addEventListener("input", (e) => {
     const onlyNums = e.target.value
       .replace(/\D/g, "")
@@ -162,6 +152,7 @@ function setupFormLogic() {
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
+
     if (!nameInput.value.trim()) {
       nameError.style.display = "block";
       return;
@@ -170,33 +161,37 @@ function setupFormLogic() {
       phoneError.style.display = "block";
       return;
     }
+
     const data = {
       name: nameInput.value.trim(),
       phone: `${selectedCode} ${phoneInput.value}`,
       time: new Date().toLocaleString("uz-UZ"),
       uid: Date.now().toString(),
     };
+
     localStorage.setItem("FormData", JSON.stringify(data));
     form.querySelector("button").disabled = true;
     window.location.href = "/thankYou.html";
   });
 
-  // === Lazy Init ===
+  // === Lazy chunked setup ===
   requestIdleCallback(startCountdown);
   requestIdleCallback(setupCountries);
 }
 
 // === Safe, non-blocking execution ===
 function startApp() {
+  // Schedule initForm to run right after the browser paints the page
   requestAnimationFrame(() => {
     if ("requestIdleCallback" in window) {
-      requestIdleCallback(setupFormLogic, { timeout: 800 });
+      requestIdleCallback(initForm, { timeout: 1000 });
     } else {
-      setTimeout(setupFormLogic, 100);
+      setTimeout(initForm, 100);
     }
   });
 }
 
+// Run when DOM is ready
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", startApp);
 } else {
