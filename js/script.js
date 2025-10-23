@@ -174,26 +174,42 @@ function initForm() {
     window.location.href = "/thankYou.html";
   });
 
-  // === Lazy chunked setup (mobile-safe) ===
+  // === Mobile-safe initialization ===
   function safeRun(fn, delay = 300) {
-    if ("requestIdleCallback" in window) {
-      requestIdleCallback(fn, { timeout: 500 });
-    } else {
+    try {
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(fn, { timeout: 500 });
+      } else {
+        setTimeout(fn, delay);
+      }
+    } catch {
       setTimeout(fn, delay);
     }
   }
 
-  // run both functions safely on all devices
-  safeRun(startCountdown);
+  // Run immediately on all devices
   safeRun(setupCountries);
+  safeRun(startCountdown);
 
-  // fallback for some iOS / Android browsers that ignore idle callbacks
+  // Force timer to start if browser blocks idle callbacks
   setTimeout(() => {
     if (!window.__timerStarted) {
       window.__timerStarted = true;
       startCountdown();
     }
-  }, 1500);
+  }, 1000);
+
+  // Mobile user interaction fallback
+  document.addEventListener(
+    "touchstart",
+    () => {
+      if (!window.__timerStarted) {
+        window.__timerStarted = true;
+        startCountdown();
+      }
+    },
+    { once: true, passive: true }
+  );
 }
 
 // === Safe, non-blocking execution ===
