@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Elements
   const form = document.getElementById("registrationForm");
   const nameInput = document.getElementById("name");
   const phoneInput = document.getElementById("phone");
@@ -11,8 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const unlockBtn = document.getElementById("unlockBtn");
   const timerElement = document.getElementById("timer");
 
-  // ---- Lock state (30:00 gate) ----
-  let totalSeconds = 1800; // 30 minutes
+  let totalSeconds = 1800;
   const pad = (n) => String(n).padStart(2, "0");
   const setTime = (s) => {
     const m = pad(Math.floor(s / 60));
@@ -21,7 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (unlockBtn) unlockBtn.textContent = `Ro'yxatdan o'tish (${m}:${sec})`;
   };
 
-  // Ensure initial UI state
   if (form) form.style.display = "none";
   if (unlockBtn) {
     unlockBtn.disabled = true;
@@ -44,19 +41,17 @@ document.addEventListener("DOMContentLoaded", () => {
     setTime(totalSeconds);
   }, 1000);
 
-  // Reveal form after unlock
   if (unlockBtn) {
     unlockBtn.addEventListener("click", () => {
       if (unlockBtn.disabled) return;
-      unlockBtn.style.display = "none"; // hide the gate button
+      unlockBtn.style.display = "none";
       if (form) {
-        form.style.display = "block"; // show the form
+        form.style.display = "block";
         setTimeout(() => nameInput && nameInput.focus(), 0);
       }
     });
   }
 
-  // ---- Country list & formatting (original logic) ----
   const countries = [
     { name: "Uzbekistan", code: "+998" },
     { name: "AQSH", code: "+1" },
