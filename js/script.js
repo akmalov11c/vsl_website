@@ -1,5 +1,3 @@
-// === Performance-Optimized Form Logic ===
-
 function initForm() {
   const form = document.getElementById("registrationForm");
   const nameInput = document.getElementById("name");
@@ -12,7 +10,6 @@ function initForm() {
   const unlockBtn = document.getElementById("unlockBtn");
   const timerElement = document.getElementById("timer");
 
-  // === 30-minute countdown ===
   let totalSeconds = 1800;
   const pad = (n) => String(n).padStart(2, "0");
 
@@ -53,7 +50,6 @@ function initForm() {
     }, 1000);
   }
 
-  // === Unlock button logic ===
   if (unlockBtn) {
     unlockBtn.addEventListener("click", () => {
       if (unlockBtn.disabled) return;
@@ -65,7 +61,6 @@ function initForm() {
     });
   }
 
-  // === Country setup ===
   const countries = [
     { name: "Uzbekistan", code: "+998" },
     { name: "AQSH", code: "+1" },
@@ -136,7 +131,6 @@ function initForm() {
     });
   }
 
-  // === Input formatters ===
   phoneInput.addEventListener("input", (e) => {
     const onlyNums = e.target.value
       .replace(/\D/g, "")
@@ -180,7 +174,6 @@ function initForm() {
     window.location.href = "/thankYou.html";
   });
 
-  // === Mobile-safe initialization ===
   function safeRun(fn, delay = 300) {
     try {
       if ("requestIdleCallback" in window) {
@@ -193,11 +186,9 @@ function initForm() {
     }
   }
 
-  // Run immediately on all devices
   safeRun(setupCountries);
   safeRun(startCountdown);
 
-  // Force timer to start if browser blocks idle callbacks
   setTimeout(() => {
     if (!window.__timerStarted) {
       window.__timerStarted = true;
@@ -205,7 +196,6 @@ function initForm() {
     }
   }, 1000);
 
-  // Mobile user interaction fallback
   document.addEventListener(
     "touchstart",
     () => {
@@ -218,9 +208,7 @@ function initForm() {
   );
 }
 
-// === Safe, non-blocking execution ===
 function startApp() {
-  // Schedule initForm to run right after the browser paints the page
   requestAnimationFrame(() => {
     if ("requestIdleCallback" in window) {
       requestIdleCallback(initForm, { timeout: 1000 });
@@ -230,7 +218,6 @@ function startApp() {
   });
 }
 
-// Run when DOM is ready
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", startApp);
 } else {
