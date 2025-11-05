@@ -8,6 +8,10 @@
       content="Biznes 0 dan boshlash va mavjud biznesni rivojlantirish - bepul darslik va ro'yxatdan o'tish"
     />
     <meta http-equiv="Cache-Control" content="public, max-age=31536000" />
+    <link rel="preconnect" href="https://www.youtube.com" />
+    <link rel="preconnect" href="https://www.google.com" />
+    <link rel="dns-prefetch" href="https://www.youtube.com" />
+    <link rel="dns-prefetch" href="https://www.google.com" />
     <!-- <link
       rel="preload"
       as="image"
@@ -470,16 +474,42 @@
           style="width: 100%; position: relative; padding-top: 56.25%"
         ></div> -->
 
-        <iframe
-          width="100%"
-          height="250"
-          src="https://www.youtube.com/embed/48app_6iD1Q?si=4gfkFHQHvkHn5shs"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen
-        ></iframe>
+        <div
+          class="youtube-wrapper"
+          style="position: relative; width: 100%; height: 250px"
+        >
+          <img
+            src="https://img.youtube.com/vi/48app_6iD1Q/hqdefault.jpg"
+            alt="YouTube preview"
+            width="100%"
+            height="250"
+            style="
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 8px;
+              cursor: pointer;
+            "
+            id="youtube-thumbnail"
+            loading="lazy"
+            decoding="async"
+          />
+          <div
+            id="youtube-play-button"
+            style="
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              width: 68px;
+              height: 48px;
+              background: url('https://www.gstatic.com/images/icons/material/system/2x/play_circle_filled_white_48dp.png')
+                no-repeat center center / contain;
+              cursor: pointer;
+            "
+          ></div>
+        </div>
+
         <p class="timer_info">
           24 soatdan so’ng <span>darslik o’chiriladi!</span>
         </p>
@@ -606,6 +636,31 @@
         <div class="bottom_shaodow" aria-hidden="true"></div>
       </main>
     </div>
+    <script defer>
+      document.addEventListener("DOMContentLoaded", function () {
+        const wrapper = document.querySelector(".youtube-wrapper");
+        const thumbnail = document.getElementById("youtube-thumbnail");
+        const playButton = document.getElementById("youtube-play-button");
+
+        function loadYouTube() {
+          const iframe = document.createElement("iframe");
+          iframe.src =
+            "https://www.youtube.com/embed/48app_6iD1Q?autoplay=1&rel=0&modestbranding=1";
+          iframe.width = "100%";
+          iframe.height = "250";
+          iframe.title = "YouTube video player";
+          iframe.allow =
+            "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+          iframe.allowFullscreen = true;
+          iframe.frameBorder = "0";
+          wrapper.innerHTML = "";
+          wrapper.appendChild(iframe);
+        }
+
+        wrapper.addEventListener("click", loadYouTube);
+        playButton.addEventListener("click", loadYouTube);
+      });
+    </script>
     <!-- 
     <script type="text/javascript" defer>
       (function (v, i, d, a, l, y, t, c, s) {
